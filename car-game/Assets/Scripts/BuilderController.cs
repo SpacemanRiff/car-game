@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class BuilderController : MonoBehaviour {
 
     public float CameraSpeed = 1;
+    public Text tileOutput;
     private GameObject tilePiece;
     private string[] trackPieces;
     private int trackListIndex;
@@ -12,7 +14,6 @@ public class BuilderController : MonoBehaviour {
 	void Start () {
         trackPieces = new string[] { "StraightAway", "Corner", "T-Piece" };
         trackListIndex = 0;
-
     }
 	
 	// Update is called once per frame
@@ -24,7 +25,6 @@ public class BuilderController : MonoBehaviour {
 
             if (tilePiece == null) { 
                 Debug.Log("created");
-                trackListIndex = 0;
                 tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]));
                 tilePiece.transform.position = new Vector3(transform.position.x % 50, 0, transform.position.z % 50);
             }else
@@ -62,7 +62,6 @@ public class BuilderController : MonoBehaviour {
             if (tilePiece != null)
             {
                 Destroy(tilePiece);
-
             }
         }
 
@@ -71,5 +70,6 @@ public class BuilderController : MonoBehaviour {
         {
             tilePiece.transform.position = new Vector3(transform.position.x - (transform.position.x % 50), 0, transform.position.z - (transform.position.z % 50));
         }
+        tileOutput.text = trackPieces[trackListIndex % trackPieces.Length];
     }
 }

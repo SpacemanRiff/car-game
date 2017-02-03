@@ -47,7 +47,7 @@ public class CarController : MonoBehaviour {
 	void FixedUpdate () {
 
 		if(speedText!=null)
-			speedText.text = "Speed: " + Speed().ToString("f0") + " km/h";
+			speedText.text = "Speed: " + Speed()/*.ToString("f0")*/ + " km/h";
 
 		float scaledTorque = Input.GetAxis("Drive") * torque;
 
