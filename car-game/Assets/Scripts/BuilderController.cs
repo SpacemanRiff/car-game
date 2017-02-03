@@ -8,7 +8,9 @@ public class BuilderController : MonoBehaviour {
     public float smoothTime = 10f;
     public Text tileOutput;
     public Text debugOutput;
+    private int tilesPlaced = 0;
     private GameObject tilePiece;
+    private GameObject spawnTile;
     private string[] trackPieces;
     private int trackListIndex;
 
@@ -32,6 +34,14 @@ public class BuilderController : MonoBehaviour {
             }else
             {
                 Debug.Log("placed");
+                if(tilesPlaced <= 0)
+                {
+                    tilePiece.GetComponent<TilePieceController>().SetSpawnTile();
+                    spawnTile = tilePiece;
+                    Debug.Log("spawn tile");
+                }
+                Debug.Log(tilePiece.GetComponent<TilePieceController>().IsSpawnTile());
+                tilesPlaced++;
                 tilePiece = null;                
             }
         }
@@ -59,6 +69,16 @@ public class BuilderController : MonoBehaviour {
 
             }
         }
+        if (Input.GetButtonDown("Y"))
+        {
+            if (tilePiece != null)
+            {
+                Destroy(tilePiece);
+                trackListIndex += 1;
+                tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]));
+
+            }
+        }
         if (Input.GetButtonDown("B"))
         {
             if (tilePiece != null)
@@ -66,11 +86,25 @@ public class BuilderController : MonoBehaviour {
                 Destroy(tilePiece);
             }
         }
+        if (Input.GetButtonDown("Start"))
+        {
+            if (spawnTile != null)
+            {
+                if (tilePiece != null)
+                {
+                    Destroy(tilePiece);
+                }
+                GameObject car = (GameObject)Instantiate(Resources.Load("Car"));
+                car.transform.position = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().position;
+                car.transform.rotation = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().rotation;
+                Destroy(gameObject);
+            }
+        }
 
 
         if (tilePiece != null)
         {
-            tilePiece.transform.position = Vector3.Lerp(tilePiece.transform.position, new Vector3(Mathf.Floor(transform.position.x/50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), Time.deltaTime * smoothTime);
+            tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50));
         }
         tileOutput.text = trackPieces[trackListIndex % trackPieces.Length];
 
