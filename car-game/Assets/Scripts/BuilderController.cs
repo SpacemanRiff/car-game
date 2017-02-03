@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class BuilderController : MonoBehaviour {
 
     public float CameraSpeed = 1;
+    public float smoothTime = 10f;
     public Text tileOutput;
+    public Text debugOutput;
     private GameObject tilePiece;
     private string[] trackPieces;
     private int trackListIndex;
@@ -68,8 +70,15 @@ public class BuilderController : MonoBehaviour {
 
         if (tilePiece != null)
         {
-            tilePiece.transform.position = new Vector3(transform.position.x - (transform.position.x % 50), 0, transform.position.z - (transform.position.z % 50));
+            tilePiece.transform.position = Vector3.Lerp(tilePiece.transform.position, new Vector3(Mathf.Floor(transform.position.x/50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), Time.deltaTime * smoothTime);
         }
         tileOutput.text = trackPieces[trackListIndex % trackPieces.Length];
+
+        setInputDebugText();
+    }
+
+    private void setInputDebugText()
+    {
+        debugOutput.text = "Horizontal: " + Input.GetAxis("Horizontal") + "\nVertical: " + Input.GetAxis("Vertical")  + "\nA: " + Input.GetButton("A") + "\nB: " + Input.GetButton("B") + "\nY: " + Input.GetButton("Y") + "\nLB: " + Input.GetButton("LB") + "\nRB: " + Input.GetButton("RB");
     }
 }
