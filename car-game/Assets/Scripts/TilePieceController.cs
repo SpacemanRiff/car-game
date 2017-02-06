@@ -7,15 +7,36 @@ public class TilePieceController : MonoBehaviour {
 
     private Vector3 destinationVector;
     private bool isSpawnTile;
+    private bool isBeingPlaced;
+    private bool placable = true;
 
 	// Use this for initialization
 	void Start () {
         destinationVector = transform.position;
+        isBeingPlaced = false;
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         transform.position = Vector3.Lerp(transform.position, destinationVector, Time.deltaTime * 10);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("enter");
+        if (other.tag == "TilePiece")
+        {
+            placable = false;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "TilePiece")
+        {
+            Debug.Log("exit");
+            placable = true;
+        }
     }
 
     public void SetDestinationVector(Vector3 destinationVector)
@@ -28,12 +49,22 @@ public class TilePieceController : MonoBehaviour {
         isSpawnTile = true;
     }
 
+    public void SetBeingPlaced(bool isBeingPlaced)
+    {
+        this.isBeingPlaced = isBeingPlaced;
+    }
+
     public bool IsSpawnTile()
     {
         return isSpawnTile;
     }
 
     public Transform GetSpawnLocation()
+    {
+        return spawnPoint.transform;
+    }
+
+    public bool GetPlacable()
     {
         return spawnPoint.transform;
     }

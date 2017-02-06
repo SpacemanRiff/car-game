@@ -27,22 +27,32 @@ public class BuilderController : MonoBehaviour {
         if (Input.GetButtonDown("A"))
         {
 
-            if (tilePiece == null) { 
+            if (tilePiece == null) {
                 Debug.Log("created");
                 tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]));
                 tilePiece.transform.position = new Vector3(transform.position.x % 50, 0, transform.position.z % 50);
-            }else
+                tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(true);
+            }
+            else
             {
-                Debug.Log("placed");
-                if(tilesPlaced <= 0)
+                if (tilePiece.GetComponent<TilePieceController>().GetPlacable())
                 {
-                    tilePiece.GetComponent<TilePieceController>().SetSpawnTile();
-                    spawnTile = tilePiece;
-                    Debug.Log("spawn tile");
+                    Debug.Log("placed");
+                    if (tilesPlaced <= 0)
+                    {
+                        tilePiece.GetComponent<TilePieceController>().SetSpawnTile();
+                        spawnTile = tilePiece;
+                        Debug.Log("spawn tile");
+                    }
+                    Debug.Log(tilePiece.GetComponent<TilePieceController>().IsSpawnTile());
+                    tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(false);
+                    tilesPlaced++;
+                    tilePiece = null;
                 }
-                Debug.Log(tilePiece.GetComponent<TilePieceController>().IsSpawnTile());
-                tilesPlaced++;
-                tilePiece = null;                
+                else
+                {
+                    Debug.Log("can\'t sorry lol");
+                }
             }
         }
         if (Input.GetButtonDown("LB"))
