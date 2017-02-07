@@ -29,8 +29,7 @@ public class BuilderController : MonoBehaviour {
 
             if (tilePiece == null) {
                 Debug.Log("created");
-                tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]));
-                tilePiece.transform.position = new Vector3(transform.position.x % 50, 0, transform.position.z % 50);
+                tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]), new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), new Quaternion(0,0,0,0));
                 tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(true);
             }
             else
