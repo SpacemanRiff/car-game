@@ -5,15 +5,23 @@ public class TilePieceController : MonoBehaviour {
 
     public GameObject spawnPoint;
 
+    private Rigidbody rb;
     private Vector3 destinationVector;
     private bool isSpawnTile;
-    private bool isBeingPlaced;
+    private bool isBeingPlaced = false;
     private bool placable = true;
+    private Color defaultColor;
+    private Color placableColor, unplacableColor;
 
 	// Use this for initialization
 	void Start () {
         destinationVector = transform.position;
-        isBeingPlaced = false;
+        rb = gameObject.AddComponent<Rigidbody>() as Rigidbody;
+        rb.useGravity = false;
+        rb.isKinematic = true;
+        defaultColor = gameObject.GetComponent<Renderer>().material.color;
+        placableColor = new Color(defaultColor.r, 1, defaultColor.b);
+        unplacableColor = new Color(1, defaultColor.g, defaultColor.b);
     }
 	
 	// Update is called once per frame
@@ -21,18 +29,40 @@ public class TilePieceController : MonoBehaviour {
         transform.position = Vector3.Lerp(transform.position, destinationVector, Time.deltaTime * 10);
     }
 
+    void Update()
+    {
+        Debug.Log(isBeingPlaced);
+        if (isBeingPlaced)
+        {
+            if (placable)
+            {
+                Debug.Log("should be green");
+                gameObject.GetComponent<Renderer>().material.color = placableColor;
+            }
+            else
+            {
+                Debug.Log("should be red");
+                gameObject.GetComponent<Renderer>().material.color = unplacableColor;
+            }
+        }
+        else
+        {
+            gameObject.GetComponent<Renderer>().material.color = defaultColor;
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("enter");
-        if (other.tag == "TilePiece")
+        if (other.tag == "TrackPiece")
         {
+            Debug.Log("enter");
             placable = false;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.tag == "TilePiece")
+        if (other.tag == "TrackPiece")
         {
             Debug.Log("exit");
             placable = true;
@@ -49,9 +79,10 @@ public class TilePieceController : MonoBehaviour {
         isSpawnTile = true;
     }
 
-    public void SetBeingPlaced(bool isBeingPlaced)
+    public void SetBeingPlaced(bool beingPlaced)
     {
-        this.isBeingPlaced = isBeingPlaced;
+        isBeingPlaced = beingPlaced;
+        Debug.Log("did the thing, " + isBeingPlaced);
     }
 
     public bool IsSpawnTile()
