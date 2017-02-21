@@ -36,17 +36,7 @@ public class BuilderController : MonoBehaviour {
             {
                 if (tilePiece.GetComponent<TilePieceController>().GetPlacable())
                 {
-                    Debug.Log("placed");
-                    if (tilesPlaced <= 0)
-                    {
-                        tilePiece.GetComponent<TilePieceController>().SetSpawnTile();
-                        spawnTile = tilePiece;
-                        Debug.Log("spawn tile");
-                    }
-                    Debug.Log(tilePiece.GetComponent<TilePieceController>().IsSpawnTile());
-                    tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(false);
-                    tilesPlaced++;
-                    tilePiece = null;
+                    this.PlaceTile();
                 }
                 else
                 {
@@ -66,16 +56,6 @@ public class BuilderController : MonoBehaviour {
             if (tilePiece != null)
             {
                 tilePiece.GetComponent<TilePieceController>().Rotate(90f);
-            }
-        }
-        if (Input.GetButtonDown("Y"))
-        {
-            if (tilePiece != null)
-            {
-                Destroy(tilePiece);
-                trackListIndex += 1;
-                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
-
             }
         }
         if (Input.GetButtonDown("Y"))
@@ -113,7 +93,7 @@ public class BuilderController : MonoBehaviour {
 
         if (tilePiece != null)
         {
-            tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50));
+            tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0.1f, Mathf.Floor(transform.position.z / 50) * 50));
         }
         tileOutput.text = trackPieces[trackListIndex % trackPieces.Length];
 
@@ -130,5 +110,21 @@ public class BuilderController : MonoBehaviour {
         GameObject piece = (GameObject)Instantiate(Resources.Load(pieceName), new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), new Quaternion(0, 0, 0, 0));
         piece.GetComponent<TilePieceController>().SetBeingPlaced(true);
         return piece;
+    }
+
+    private void PlaceTile()
+    {
+        Debug.Log("placed");
+        if (tilesPlaced <= 0)
+        {
+            tilePiece.GetComponent<TilePieceController>().SetSpawnTile();
+            spawnTile = tilePiece;
+            Debug.Log("spawn tile");
+        }
+        Debug.Log(tilePiece.GetComponent<TilePieceController>().IsSpawnTile());
+        tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50));
+        tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(false);
+        tilesPlaced++;
+        tilePiece = null;
     }
 }
