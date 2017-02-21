@@ -97,6 +97,11 @@ public class TilePieceController : MonoBehaviour {
 
     public bool GetPlacable()
     {
-        return spawnPoint.transform;
+        return placable;
+    }
+
+    public void Rotate(float angle)
+    {
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + angle, transform.eulerAngles.z);
     }
 }

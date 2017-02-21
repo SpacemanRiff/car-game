@@ -27,10 +27,10 @@ public class BuilderController : MonoBehaviour {
         if (Input.GetButtonDown("A"))
         {
 
-            if (tilePiece == null) {
+            if (tilePiece == null)
+            {
+                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
                 Debug.Log("created");
-                tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]), new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), new Quaternion(0,0,0,0));
-                tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(true);
             }
             else
             {
@@ -58,14 +58,14 @@ public class BuilderController : MonoBehaviour {
         {
             if (tilePiece != null)
             {
-                tilePiece.transform.eulerAngles = new Vector3(tilePiece.transform.eulerAngles.x, tilePiece.transform.eulerAngles.y - 90f, tilePiece.transform.eulerAngles.z);
+                tilePiece.GetComponent<TilePieceController>().Rotate(-90f);
             }
         }
         if (Input.GetButtonDown("RB"))
         {
             if (tilePiece != null)
             {
-                tilePiece.transform.eulerAngles = new Vector3(tilePiece.transform.eulerAngles.x, tilePiece.transform.eulerAngles.y + 90f, tilePiece.transform.eulerAngles.z);
+                tilePiece.GetComponent<TilePieceController>().Rotate(90f);
             }
         }
         if (Input.GetButtonDown("Y"))
@@ -74,7 +74,7 @@ public class BuilderController : MonoBehaviour {
             {
                 Destroy(tilePiece);
                 trackListIndex += 1;
-                tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]));
+                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
 
             }
         }
@@ -84,7 +84,7 @@ public class BuilderController : MonoBehaviour {
             {
                 Destroy(tilePiece);
                 trackListIndex += 1;
-                tilePiece = (GameObject)Instantiate(Resources.Load(trackPieces[trackListIndex % trackPieces.Length]));
+                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
 
             }
         }
@@ -123,5 +123,12 @@ public class BuilderController : MonoBehaviour {
     private void setInputDebugText()
     {
         debugOutput.text = "Horizontal: " + Input.GetAxis("Horizontal") + "\nVertical: " + Input.GetAxis("Vertical")  + "\nA: " + Input.GetButton("A") + "\nB: " + Input.GetButton("B") + "\nY: " + Input.GetButton("Y") + "\nLB: " + Input.GetButton("LB") + "\nRB: " + Input.GetButton("RB");
+    }
+
+    private GameObject CreateTilePiece(string pieceName)
+    {
+        GameObject piece = (GameObject)Instantiate(Resources.Load(pieceName), new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), new Quaternion(0, 0, 0, 0));
+        piece.GetComponent<TilePieceController>().SetBeingPlaced(true);
+        return piece;
     }
 }
