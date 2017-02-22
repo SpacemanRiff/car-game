@@ -4,12 +4,15 @@ using System.Collections;
 public class TilePieceController : MonoBehaviour {
 
     public GameObject spawnPoint;
+    public GameObject[] connectors;
 
     private Rigidbody rb;
     private Vector3 destinationVector;
     private bool isSpawnTile;
     private bool isBeingPlaced = false;
     private bool placable = true;
+    private bool collidingWithPieces = false;
+    private int ID = -1;
     private Color defaultColor;
     private Color placableColor, unplacableColor;
 
@@ -31,7 +34,7 @@ public class TilePieceController : MonoBehaviour {
 
     void Update()
     {
-        Debug.Log(isBeingPlaced);
+        CheckPlacable();
         if (isBeingPlaced)
         {
             if (placable)
@@ -56,7 +59,7 @@ public class TilePieceController : MonoBehaviour {
         if (other.tag == "TrackPiece")
         {
             Debug.Log("enter");
-            placable = false;
+            collidingWithPieces = true;
         }
     }
 
@@ -65,7 +68,7 @@ public class TilePieceController : MonoBehaviour {
         if (other.tag == "TrackPiece")
         {
             Debug.Log("exit");
-            placable = true;
+            collidingWithPieces = false;
         }
     }
 
@@ -83,6 +86,11 @@ public class TilePieceController : MonoBehaviour {
     {
         isBeingPlaced = beingPlaced;
         Debug.Log("did the thing, " + isBeingPlaced);
+    }
+
+    public void SetPlaceID(int ID)
+    {
+        this.ID = ID;
     }
 
     public bool IsSpawnTile()
@@ -103,5 +111,21 @@ public class TilePieceController : MonoBehaviour {
     public void Rotate(float angle)
     {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + angle, transform.eulerAngles.z);
+    }
+
+    private void CheckPlacable()
+    {
+        placable = !collidingWithPieces && CheckConnections();
+    }
+
+    private bool CheckConnections()
+    {
+        bool isConnected = false;
+        for (int i = 0; i < connectors.Length && !isConnected; i++)
+        {
+            isConnected = connectors[i].GetComponent<ConnectorController>().isConnected();
+        }
+
+        return isConnected || ID == 0;
     }
 }

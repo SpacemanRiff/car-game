@@ -109,6 +109,7 @@ public class BuilderController : MonoBehaviour {
     {
         GameObject piece = (GameObject)Instantiate(Resources.Load(pieceName), new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50), new Quaternion(0, 0, 0, 0));
         piece.GetComponent<TilePieceController>().SetBeingPlaced(true);
+        piece.GetComponent<TilePieceController>().SetPlaceID(tilesPlaced);
         return piece;
     }
 
