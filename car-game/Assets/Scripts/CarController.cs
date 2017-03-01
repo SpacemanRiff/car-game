@@ -51,10 +51,10 @@ public class CarController : MonoBehaviour {
 
 		float scaledTorque = Input.GetAxis("Drive") * torque;
 
-		if(wheelRL.rpm < idealRPM)
-			scaledTorque = Mathf.Lerp(scaledTorque/10f, scaledTorque, wheelRL.rpm / idealRPM );
-		else 
-			scaledTorque = Mathf.Lerp(scaledTorque, 0,  (wheelRL.rpm-idealRPM) / (maxRPM-idealRPM) );
+		//if(wheelRL.rpm < idealRPM)
+			scaledTorque = Mathf.Lerp(scaledTorque/10f, scaledTorque, 0/*wheelRL.rpm / idealRPM*/ );
+		//else 
+			//scaledTorque = Mathf.Lerp(scaledTorque, 0,  (wheelRL.rpm-idealRPM) / (maxRPM-idealRPM) );
 
 		DoRollBar(wheelFR, wheelFL);
 		DoRollBar(wheelRR, wheelRL);
