@@ -12,6 +12,7 @@ public class TilePieceController : MonoBehaviour {
     private bool isBeingPlaced = false;
     private bool placable = true;
     private bool collidingWithPieces = false;
+    private bool IsLastTile = false;
     private int ID = -1;
     private Color defaultColor;
     private Color placableColor, unplacableColor;
@@ -82,6 +83,11 @@ public class TilePieceController : MonoBehaviour {
         isSpawnTile = true;
     }
 
+    public void SetLastTile(bool lastTile)
+    {
+        IsLastTile = lastTile;
+    }
+
     public void SetBeingPlaced(bool beingPlaced)
     {
         isBeingPlaced = beingPlaced;
@@ -96,6 +102,11 @@ public class TilePieceController : MonoBehaviour {
     public bool IsSpawnTile()
     {
         return isSpawnTile;
+    }
+
+    public bool IsLastTile()
+    {
+        return IsLastTile;
     }
 
     public Transform GetSpawnLocation()

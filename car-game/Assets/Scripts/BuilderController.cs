@@ -26,11 +26,19 @@ public class BuilderController : MonoBehaviour {
         transform.position = transform.position + Vector3.right * CameraSpeed * Input.GetAxis("Horizontal");
         if (Input.GetButtonDown("A"))
         {
-
             if (tilePiece == null)
             {
-                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
-                Debug.Log("created");
+                if (spawnTile == null)
+                {
+                    tilePiece = this.CreateTilePiece("StartPiece");
+                    Debug.Log("created");
+
+                }
+                else
+                {
+                    tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
+                    Debug.Log("created");
+                }
             }
             else
             {
@@ -60,7 +68,7 @@ public class BuilderController : MonoBehaviour {
         }
         if (Input.GetButtonDown("Y"))
         {
-            if (tilePiece != null)
+            if (tilePiece != null && spawnTile != null)
             {
                 Destroy(tilePiece);
                 trackListIndex += 1;
