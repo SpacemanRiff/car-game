@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3a4ba9ccffb3ac14c8d902106d529be7
+timeCreated: 1464974259
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - m_Rigidbody: {instanceID: 0}
+  - tcs_off_texture: {fileID: 2800000, guid: ce123209db7b98a4fa97c464d93fae2d, type: 3}
+  - tcs_texture: {fileID: 2800000, guid: 8f76d2b980aff484b9c8f9ef90ad3ee6, type: 3}
+  - abs_texture: {fileID: 2800000, guid: 3ca997038d698c84294d50af26deb85c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
