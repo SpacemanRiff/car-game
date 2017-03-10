@@ -16,7 +16,7 @@ public class BuilderController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        trackPieces = new string[] { "StraightAway", "Corner", "T-Piece", "LongBend" };
+        trackPieces = new string[] { "StraightAway", "Corner", "T-Piece", "Bendy", "Bridge" };
         trackListIndex = 0;
     }
 	
