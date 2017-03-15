@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BuilderController : MonoBehaviour {
 
@@ -106,6 +107,10 @@ public class BuilderController : MonoBehaviour {
         tileOutput.text = trackPieces[trackListIndex % trackPieces.Length];
 
         setInputDebugText();
+        if (Input.GetButtonDown("Exit"))
+        {
+            SceneManager.LoadScene("mainmenu");
+        }
     }
 
     private void setInputDebugText()
