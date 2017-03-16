@@ -92,7 +92,7 @@ public class BuilderController : MonoBehaviour {
                 {
                     Destroy(tilePiece);
                 }
-                GameObject car = (GameObject)Instantiate(Resources.Load("Car"));
+                GameObject car = (GameObject)Instantiate(Resources.Load("Van"));
                 car.transform.position = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().position;
                 car.transform.rotation = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().rotation;
                 Destroy(gameObject);
