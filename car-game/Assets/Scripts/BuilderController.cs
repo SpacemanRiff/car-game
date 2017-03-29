@@ -92,7 +92,19 @@ public class BuilderController : MonoBehaviour {
                 {
                     Destroy(tilePiece);
                 }
-                GameObject car = (GameObject)Instantiate(Resources.Load("Van"));
+                GameObject car = new GameObject();
+                switch (PlayerPrefs.GetInt("selectedCar"))
+                {
+                    case 0:
+                        car = (GameObject)Instantiate(Resources.Load("Car"));
+                        break;
+                    case 1:
+                        car = (GameObject)Instantiate(Resources.Load("Van"));
+                        break;
+                    default:
+                        car = (GameObject)Instantiate(Resources.Load("Car"));
+                        break;
+                }
                 car.transform.position = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().position;
                 car.transform.rotation = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().rotation;
                 Destroy(gameObject);
