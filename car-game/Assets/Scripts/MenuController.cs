@@ -60,43 +60,30 @@ public class MenuController : MonoBehaviour {
 
         if (!inCarSelect)
         {
-            if (Input.GetButton("A"))
+            if (Input.GetButtonDown("A"))
             {
-                if (cursorPos == 0)
+                if (menuButtons[cursorPos].GetComponent<ButtonController>().GetButtonType() == ButtonController.ButtonType.START)
                 {
-                    PlayerPrefs.SetInt("selectedCar", carCursorPos);
+                    PlayerPrefs.SetInt("selectedCar", (int)carChoices[carCursorPos].GetComponent<ButtonController>().GetCarType());
                     SceneManager.LoadScene("levelbuildtest");
                 }
-                if (cursorPos == 1 && currentCursorSpeedDecay <= 0)
+                if (menuButtons[cursorPos].GetComponent<ButtonController>().GetButtonType() == ButtonController.ButtonType.CARSELECT)
                 {
                     inCarSelect = true;
-                    currentCursorSpeedDecay = cursorSpeedLimit;
                     SetCarButtonsActive(true);
                 }
-                if (cursorPos == menuButtons.Length - 1)
+                if (menuButtons[cursorPos].GetComponent<ButtonController>().GetButtonType() == ButtonController.ButtonType.QUIT)
                 {
                     Application.Quit();
-                }
-            }
-            if (Input.GetAxis("Horizontal") > 0.25)
-            {
-                if (cursorPos == 1)
-                {
-                    inCarSelect = true;
-                    SetCarButtonsActive(true);
                 }
             }
         }
         else
         {
-            if (Input.GetButton("A") || Input.GetButton("B") || Input.GetAxis("Horizontal") < -0.25)
+            if (Input.GetButtonDown("A") || Input.GetButtonDown("B"))
             {
-                if (inCarSelect && currentCursorSpeedDecay <= 0)
-                {
-                    inCarSelect = false;
-                    currentCursorSpeedDecay = cursorSpeedLimit;
-                    SetCarButtonsActive(false);
-                }
+                inCarSelect = false;
+                SetCarButtonsActive(false);
             }
         }
 

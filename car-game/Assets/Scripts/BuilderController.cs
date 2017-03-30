@@ -93,12 +93,13 @@ public class BuilderController : MonoBehaviour {
                     Destroy(tilePiece);
                 }
                 GameObject car = new GameObject();
-                switch (PlayerPrefs.GetInt("selectedCar"))
+                ButtonController.CarType carType = (ButtonController.CarType)PlayerPrefs.GetInt("selectedCar") ;
+                switch (carType)
                 {
-                    case 0:
+                    case ButtonController.CarType.CAR:
                         car = (GameObject)Instantiate(Resources.Load("Car"));
                         break;
-                    case 1:
+                    case ButtonController.CarType.VAN:
                         car = (GameObject)Instantiate(Resources.Load("Van"));
                         break;
                     default:
