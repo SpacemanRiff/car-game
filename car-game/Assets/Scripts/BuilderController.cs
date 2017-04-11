@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
+using System.Collections.Generic;
 
 public class BuilderController : MonoBehaviour {
 
@@ -9,15 +11,17 @@ public class BuilderController : MonoBehaviour {
     public float smoothTime = 10f;
     public Text tileOutput;
     public Text debugOutput;
+    public GameObject timer;
     private int tilesPlaced = 0;
     private GameObject tilePiece;
     private GameObject spawnTile;
-    private string[] trackPieces;
+    private List<string> trackPieces;
     private int trackListIndex;
 
 	// Use this for initialization
 	void Start () {
-        trackPieces = new string[] { "StraightAway", "Corner", "T-Piece", "Bendy", "Bridge" };
+        trackPieces = new List<string>();
+        AddToList( "StraightAway", "Corner", "T-Piece", "Bendy", "Bridge");
         trackListIndex = 0;
     }
 	
@@ -25,6 +29,10 @@ public class BuilderController : MonoBehaviour {
 	void Update () {
         transform.position = transform.position + Vector3.back * CameraSpeed * Input.GetAxis("Vertical");
         transform.position = transform.position + Vector3.right * CameraSpeed * Input.GetAxis("Horizontal");
+        if(!trackPieces.Contains("Finish") && tilesPlaced > 1)
+        {
+            AddToList("Finish");
+        }
         if (Input.GetButtonDown("A"))
         {
             if (tilePiece == null)
@@ -37,7 +45,7 @@ public class BuilderController : MonoBehaviour {
                 }
                 else
                 {
-                    tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
+                    tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Count]);
                     Debug.Log("created");
                 }
             }
@@ -73,7 +81,7 @@ public class BuilderController : MonoBehaviour {
             {
                 Destroy(tilePiece);
                 trackListIndex += 1;
-                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Length]);
+                tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Count]);
 
             }
         }
@@ -108,6 +116,7 @@ public class BuilderController : MonoBehaviour {
                 }
                 car.transform.position = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().position;
                 car.transform.rotation = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().rotation;
+                timer.GetComponent<TimerController>().StartTimer();
                 Destroy(gameObject);
             }
         }
@@ -117,7 +126,7 @@ public class BuilderController : MonoBehaviour {
         {
             tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0.1f, Mathf.Floor(transform.position.z / 50) * 50));
         }
-        tileOutput.text = trackPieces[trackListIndex % trackPieces.Length];
+        tileOutput.text = trackPieces[trackListIndex % trackPieces.Count];
 
         setInputDebugText();
         if (Input.GetButtonDown("Exit"))
@@ -153,5 +162,13 @@ public class BuilderController : MonoBehaviour {
         tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(false);
         tilesPlaced++;
         tilePiece = null;
+    }
+
+    private void AddToList(params string[] parameters)
+    {
+        for (int i = 0; i < parameters.Length; i++)
+        {
+            trackPieces.Add(parameters[i]);
+        }
     }
 }
