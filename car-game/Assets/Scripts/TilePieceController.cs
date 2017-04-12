@@ -12,6 +12,7 @@ public class TilePieceController : MonoBehaviour {
     private bool isBeingPlaced = false;
     private bool placable = true;
     private bool collidingWithPieces = false;
+    private string pieceName = "";
     private int ID = -1;
     private Color defaultColor;
     private Color placableColor, unplacableColor;
@@ -113,6 +114,16 @@ public class TilePieceController : MonoBehaviour {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + angle, transform.eulerAngles.z);
     }
 
+    public void SetRotation(float angle)
+    {
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, angle, transform.eulerAngles.z);
+    }
+
+    public float GetRotation()
+    {
+        return transform.eulerAngles.y;
+    }
+
     private void CheckPlacable()
     {
         placable = !collidingWithPieces && CheckConnections();
@@ -127,5 +138,15 @@ public class TilePieceController : MonoBehaviour {
         }
 
         return isConnected || ID == 0;
+    }
+
+    public string GetName()
+    {
+        return pieceName;
+    }
+
+    public void SetName(string pieceName)
+    {
+        this.pieceName = pieceName;
     }
 }

@@ -1,0 +1,4 @@
+0 50 0 270 StartPiece
+1 50 50 90 StraightAway
+2 50 100 90 Corner
+3 100 100 270 Corner

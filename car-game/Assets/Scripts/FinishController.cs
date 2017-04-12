@@ -15,7 +15,7 @@ public class FinishController : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Car")
+        if (other.tag == "Finish Line")
         {
             Debug.Log("finished!");
             GameObject.Find("Timer").GetComponent<TimerController>().StopTimer();
