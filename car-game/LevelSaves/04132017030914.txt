@@ -1,0 +1,12 @@
+0 0 0 270 StartPiece
+1 0 0 90 StraightAway
+2 0 0 90 StraightAway
+3 0 0 90 StraightAway
+4 0 0 90 StraightAway
+5 0 0 90 StraightAway
+6 0 0 90 StraightAway
+7 0 0 90 Corner
+8 0 0 0 T-Piece
+9 0 0 0 Bendy
+10 0 0 0 Bridge
+11 0 0 90 Finish

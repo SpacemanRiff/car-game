@@ -48,7 +48,7 @@ public class BuilderController : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         if (!isSelectingFile)
         {
             transform.position = transform.position + Vector3.back * CameraSpeed * Input.GetAxis("Vertical");
@@ -61,27 +61,13 @@ public class BuilderController : MonoBehaviour {
             {
                 if (tilePiece == null)
                 {
-                    if (spawnTile == null)
-                    {
-                        tilePiece = this.CreateTilePiece("StartPiece");
-                        Debug.Log("created");
-
-                    }
-                    else
-                    {
-                        tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Count]);
-                        Debug.Log("created");
-                    }
+                    tilePiece = spawnTile == null ? this.CreateTilePiece("StartPiece") : this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Count]);
                 }
                 else
                 {
                     if (tilePiece.GetComponent<TilePieceController>().GetPlacable())
                     {
                         this.PlaceTile();
-                    }
-                    else
-                    {
-                        Debug.Log("can\'t sorry lol");
                     }
                 }
             }
@@ -99,59 +85,28 @@ public class BuilderController : MonoBehaviour {
                     tilePiece.GetComponent<TilePieceController>().Rotate(90f);
                 }
             }
-            if (Input.GetButtonDown("Y"))
+            if (Input.GetButtonDown("Y") && tilePiece != null && spawnTile != null)
             {
-                if (tilePiece != null && spawnTile != null)
-                {
-                    Destroy(tilePiece);
-                    trackListIndex += 1;
-                    tilePiece = this.CreateTilePiece(trackPieces[trackListIndex % trackPieces.Count]);
-
-                }
+                Destroy(tilePiece);
+                trackListIndex += 1;
+                tilePiece = CreateTilePiece(trackPieces[trackListIndex % trackPieces.Count]);
             }
-            if (Input.GetButtonDown("B"))
+            if (Input.GetButtonDown("B") && tilePiece != null)
             {
-                if (tilePiece != null)
-                {
-                    Destroy(tilePiece);
-                }
+                Destroy(tilePiece);
+            }
+            if (Input.GetButtonDown("Start") && spawnTile != null)
+            {
+                StartGame();
             }
             if (Input.GetButtonDown("FileList"))
             {
                 isSelectingFile = true;
                 setFileLoaderVisibility(true);
             }
-            if (Input.GetButtonDown("Start"))
-            {
-                if (spawnTile != null)
-                {
-                    if (tilePiece != null)
-                    {
-                        Destroy(tilePiece);
-                    }
-                    GameObject car = new GameObject();
-                    ButtonController.CarType carType = (ButtonController.CarType)PlayerPrefs.GetInt("selectedCar");
-                    switch (carType)
-                    {
-                        case ButtonController.CarType.CAR:
-                            car = (GameObject)Instantiate(Resources.Load("Car"));
-                            break;
-                        case ButtonController.CarType.VAN:
-                            car = (GameObject)Instantiate(Resources.Load("Van"));
-                            break;
-                        default:
-                            car = (GameObject)Instantiate(Resources.Load("Car"));
-                            break;
-                    }
-                    car.transform.position = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().position;
-                    car.transform.rotation = spawnTile.GetComponent<TilePieceController>().GetSpawnLocation().rotation;
-                    timer.GetComponent<TimerController>().StartTimer();
-                    Destroy(gameObject);
-                }
-            }
-        }else
+        }
+        else
         {
-
             if (currentCursorSpeedDecay <= 0)
             {
                 if (Input.GetAxis("Vertical") > 0.25)
@@ -237,10 +192,9 @@ public class BuilderController : MonoBehaviour {
             spawnTile = tilePiece;
             Debug.Log("spawn tile");
         }
-        Debug.Log(tilePiece.GetComponent<TilePieceController>().IsSpawnTile());
-        tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50));
+        //tilePiece.GetComponent<TilePieceController>().SetDestinationVector(new Vector3(Mathf.Floor(transform.position.x / 50) * 50, 0, Mathf.Floor(transform.position.z / 50) * 50));
         tilePiece.GetComponent<TilePieceController>().SetBeingPlaced(false);
-        AddTrackPieceToFile(tilesPlaced, Mathf.Floor(transform.position.x / 50) * 50, Mathf.Floor(transform.position.z / 50) * 50, tilePiece.GetComponent<TilePieceController>().GetRotation(),tilePiece.GetComponent<TilePieceController>().GetName());
+        //AddTrackPieceToFile(tilesPlaced, Mathf.Floor(transform.position.x / 50) * 50, Mathf.Floor(transform.position.z / 50) * 50, tilePiece.GetComponent<TilePieceController>().GetRotation(),tilePiece.GetComponent<TilePieceController>().GetName());
         tilesPlaced++;
         tilePiece = null;
     }
@@ -265,24 +219,32 @@ public class BuilderController : MonoBehaviour {
     {
         string line;
         StreamReader file = new StreamReader("LevelSaves\\" + fileName);
+        if (tilePiece != null)
+        {
+            Destroy(tilePiece);
+        }
         while ((line = file.ReadLine()) != null)
         {
             string[] words = line.Split(' ');
-            GameObject piece = (GameObject)Instantiate(Resources.Load(words[4]), new Vector3(Convert.ToSingle(words[1]), 0, Convert.ToSingle(words[2])), new Quaternion(0, 0, 0, 0));
-            piece.GetComponent<TilePieceController>().SetRotation(Convert.ToSingle(words[3]));
-            piece.GetComponent<TilePieceController>().SetPlaceID(Convert.ToInt32(words[0]));
-            piece.GetComponent<TilePieceController>().SetName(words[4]);
+            tilePiece = CreateTilePiece(words[4]);
+            tilePiece.transform.position = new Vector3(Convert.ToSingle(words[1]), 0f, Convert.ToSingle(words[2]));
+            tilePiece.GetComponent<TilePieceController>().SetRotation(Convert.ToSingle(words[3]));
+            tilePiece.GetComponent<TilePieceController>().SetPlaceID(Convert.ToInt32(words[0]));
             if(words[4] == "StartPiece")
             {
-                spawnTile = piece;
-                piece.GetComponent<TilePieceController>().SetSpawnTile();
+                spawnTile = tilePiece;
+                tilePiece.GetComponent<TilePieceController>().SetSpawnTile();
             }
-            piece = null;
+            PlaceTile();
         }
     }
 
     private void StartGame()
     {
+        if (tilePiece != null)
+        {
+            Destroy(tilePiece);
+        }
         GameObject car = new GameObject();
         ButtonController.CarType carType = (ButtonController.CarType)PlayerPrefs.GetInt("selectedCar");
         switch (carType)
