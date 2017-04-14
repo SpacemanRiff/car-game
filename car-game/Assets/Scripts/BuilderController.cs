@@ -9,46 +9,37 @@ using System.Linq;
 
 public class BuilderController : MonoBehaviour {
 
-    public float CameraSpeed = 1;
+    public float CameraSpeed = 1f;
     public float smoothTime = 10f;
-    public Text tileOutput;
-    public Text debugOutput;
-    public GameObject timer;
-    public Text FileLoaderText;
+    public Text tileOutput, debugOutput, FileLoaderText;
     public Image FileLoaderBox;
+    public GameObject timer;
+
     private int tilesPlaced = 0;
     private int currentCursorSpeedDecay = 0;
     private int cursorSpeedLimit = 10;
-    private GameObject tilePiece;
-    private GameObject spawnTile;
-    private List<string> trackPieces;
-    private int trackListIndex;
-    private string fileName;
+    private int trackListIndex, fileCursor;
     private bool isSelectingFile;
-    private int fileCursor;
-    private List<string> fileList;
+    private string fileName;
+    private GameObject tilePiece, spawnTile;
+    private List<string> trackPieces, fileList;
 
     // Use this for initialization
-    void Start () {
-        trackPieces = new List<string>();
-        AddToList( "StraightAway", "Corner", "T-Piece", "Bendy", "Bridge");
+    void Start ()
+    {
         trackListIndex = 0;
-        fileName = "LevelSaves/" + DateTime.Now.ToString("MMddyyyyhhmmss") + ".txt";
-        isSelectingFile = false;
-        setFileLoaderVisibility(false);
         fileCursor = 0;
-        DirectoryInfo dir = new DirectoryInfo("LevelSaves/");
-        FileInfo[]  info = dir.GetFiles("*.*");
-        fileList = new List<string>();
-        foreach (FileInfo f in info)
-        {
-            fileList.Add(f.ToString().Substring(f.ToString().Length -18, 18));
-            Debug.Log(fileList.Last<string>());
-        }
+        trackPieces = new List<string>();
+        AddToList("StraightAway", "Corner", "T-Piece", "Bendy", "Bridge");
+        isSelectingFile = false;
+        fileName = "LevelSaves/" + DateTime.Now.ToString("MMddyyyyhhmmss") + ".txt";
+        setFileLoaderVisibility(false);
+        PopulateFileList();
     }
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update ()
+    {
         if (!isSelectingFile)
         {
             transform.position = transform.position + Vector3.back * CameraSpeed * Input.GetAxis("Vertical");
@@ -204,6 +195,18 @@ public class BuilderController : MonoBehaviour {
         for (int i = 0; i < parameters.Length; i++)
         {
             trackPieces.Add(parameters[i]);
+        }
+    }
+
+    private void PopulateFileList()
+    {
+        DirectoryInfo dir = new DirectoryInfo("LevelSaves/");
+        FileInfo[] info = dir.GetFiles("*.*");
+        fileList = new List<string>();
+        foreach (FileInfo f in info)
+        {
+            fileList.Add(f.ToString().Substring(f.ToString().Length - 18, 18));
+            Debug.Log(fileList.Last<string>());
         }
     }
 
